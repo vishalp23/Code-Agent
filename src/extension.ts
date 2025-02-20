@@ -54,11 +54,36 @@ function detectEnvironment(): { [key: string]: any } {
         freeMemory: os.freemem()
     };
 }
+async function promptForApiKey(): Promise<string | undefined> {
+  const key = await vscode.window.showInputBox({
+    prompt: "Enter your OpenAI API key",
+    password: true,
+    ignoreFocusOut: true
+  });
+  if (key) {
+    await vscode.workspace.getConfiguration("codeAgent").update("apiKey", key, vscode.ConfigurationTarget.Global);
+  }
+  return key;
+}
+
+// Retrieves the API key from configuration, prompting the user if necessary.
+async function getApiKey(): Promise<string | undefined> {
+  const config = vscode.workspace.getConfiguration("codeAgent");
+  const apiKey = config.get<string>("apiKey");
+  if (apiKey && apiKey.trim() !== "") {
+    return apiKey;
+  }
+  return promptForApiKey();
+}
 
 /**
  * Queries the LLM using GPT-4o-mini.
  */
 async function queryLLM(prompt: string): Promise<string> {
+    const apiKey = await getApiKey();
+  if (!apiKey) {
+    throw new Error("No OpenAI API key provided.");
+  }
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
         method: 'POST',
         headers: {
