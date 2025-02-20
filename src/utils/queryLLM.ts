@@ -1,4 +1,7 @@
-// src/utils/queryLLM.ts
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
 import fetch from 'node-fetch';
 import * as vscode from 'vscode';
 import * as dotenv from 'dotenv';

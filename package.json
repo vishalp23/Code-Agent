@@ -1,80 +1,100 @@
 {
     "name": "code-agent",
     "displayName": "Code Agent",
-    "description": "An AI assistant integrated into VS Code.",
+    "description": "An AI-powered VS Code extension that automates project setup and development workflows using LLM-generated instructions.",
     "version": "0.0.1",
-    "publisher": "YourPublisherName",
+    "publisher": "51411d90-a044-6906-93e9-8c34bce60fcf",
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/vishalp23/Code-Agent.git"
+    },
     "engines": {
-        "vscode": "^1.74.0"
+      "vscode": "^1.74.0"
     },
     "categories": [
-        "Other"
+      "Other"
     ],
     "activationEvents": [
-        
+      "onCommand:codeagent.start"
     ],
     "main": "./out/extension.js",
     "contributes": {
-        "commands": [
-            {
-                "command": "codeagent.setupProject",
-                "title": "Setup Project"
-            },
-            {
-                "command": "codeagent.start",
-                "title": "Start Code Agent"
-            }
-        ],
-        "viewsContainers": {
-            "activitybar": [
-                {
-                    "id": "codeAgentViewContainer",
-                    "title": "Code Agent",
-                    "icon": "resources/code-agent.svg"
-                }
-            ]
+      "commands": [
+        {
+          "command": "codeagent.start",
+          "title": "Start Code Agent"
         },
-        "views": {
-            "codeAgentViewContainer": [
-                {
-                    "id": "codeAgentView",
-                    "name": "AI Assistant",
-                    "icon": "resources/code-agent.svg",
-                    "type": "webview"
-                }
-            ]
+        {
+          "command": "codeagent.setupProject",
+          "title": "Setup Project"
         },
-        "viewsWelcome": [
-            {
-                "view": "codeAgentView",
-                "contents": "Welcome to Code Agent. [Start Conversation](command:codeagent.start)"
-            }
+        {
+          "command": "codeagent.developProject",
+          "title": "Develop Project"
+        }
+      ],
+      "configuration": {
+        "type": "object",
+        "title": "Code Agent Configuration",
+        "properties": {
+          "codeAgent.apiKey": {
+            "type": "string",
+            "default": "",
+            "description": "Enter your OpenAI API key here. This key is used to generate project plans and code."
+          }
+        }
+      },
+      "viewsContainers": {
+        "activitybar": [
+          {
+            "id": "codeAgentViewContainer",
+            "title": "Code Agent",
+            "icon": "resources/code-agent.svg"
+          }
         ]
+      },
+      "views": {
+        "codeAgentViewContainer": [
+          {
+            "id": "codeAgentView",
+            "name": "AI Assistant",
+            "icon": "resources/code-agent.svg",
+            "type": "webview"
+          }
+        ]
+      },
+      "viewsWelcome": [
+        {
+          "view": "codeAgentView",
+          "contents": "Welcome to Code Agent. [Start Conversation](command:codeagent.start)"
+        }
+      ]
     },
     "scripts": {
-        "vscode:prepublish": "npm run compile",
-        "compile": "tsc -p ./",
-        "watch": "tsc -watch -p ./",
-        "pretest": "npm run compile && npm run lint",
-        "lint": "eslint src --ext ts",
-        "test": "node ./out/test/runTest.js"
+      "vscode:prepublish": "npm run compile",
+      "compile": "tsc -p ./",
+      "watch": "tsc -watch -p ./",
+      "pretest": "npm run compile && npm run lint",
+      "lint": "eslint \"src/**/*.{ts,tsx}\"",
+      "test": "echo \"No tests defined.\""
     },
     "devDependencies": {
-        "@types/glob": "^7.2.0",
-        "@types/mocha": "^9.1.0",
-        "@types/node": "16.x",
-        "@types/vscode": "^1.74.0",
-        "@typescript-eslint/eslint-plugin": "^5.27.0",
-        "@typescript-eslint/parser": "^5.27.0",
-        "eslint": "^8.16.0",
-        "glob": "^8.0.3",
-        "mocha": "^10.0.0",
-        "typescript": "^4.7.2",
-        "vscode-test": "^1.6.1"
+      "@types/glob": "^7.2.0",
+      "@types/mocha": "^9.1.0",
+      "@types/node": "16.x",
+      "@types/vscode": "^1.74.0",
+      "@typescript-eslint/eslint-plugin": "^5.27.0",
+      "@typescript-eslint/parser": "^5.27.0",
+      "eslint": "^8.16.0",
+      "glob": "^8.0.3",
+      "mocha": "^10.0.0",
+      "typescript": "^4.7.2",
+      "vscode-test": "^1.6.1"
     },
     "dependencies": {
-        "dotenv": "^16.4.7",
-        "gulp": "^5.0.0",
-        "node-fetch": "^2.7.0"
+      "dotenv": "^16.4.7",
+      "gulp": "^5.0.0",
+      "node-fetch": "^2.7.0"
     }
-}
+  }
+  

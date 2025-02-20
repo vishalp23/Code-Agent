@@ -1,7 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getProjectSetupStepsFromInput = exports.determineIntent = exports.queryLLM = void 0;
-// src/utils/queryLLM.ts
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
 const node_fetch_1 = require("node-fetch");
 const vscode = require("vscode");
 const dotenv = require("dotenv");

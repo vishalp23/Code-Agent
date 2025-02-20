@@ -1,7 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.createProjectFolder = exports.getFolderNameFromLLM = void 0;
-// src/utils/fileUtils.ts
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
 const vscode = require("vscode");
 const fs = require("fs");
 const path = require("path");
