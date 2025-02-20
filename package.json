@@ -1,0 +1,80 @@
+{
+    "name": "code-agent",
+    "displayName": "Code Agent",
+    "description": "An AI assistant integrated into VS Code.",
+    "version": "0.0.1",
+    "publisher": "YourPublisherName",
+    "engines": {
+        "vscode": "^1.74.0"
+    },
+    "categories": [
+        "Other"
+    ],
+    "activationEvents": [
+        
+    ],
+    "main": "./out/extension.js",
+    "contributes": {
+        "commands": [
+            {
+                "command": "codeagent.setupProject",
+                "title": "Setup Project"
+            },
+            {
+                "command": "codeagent.start",
+                "title": "Start Code Agent"
+            }
+        ],
+        "viewsContainers": {
+            "activitybar": [
+                {
+                    "id": "codeAgentViewContainer",
+                    "title": "Code Agent",
+                    "icon": "resources/code-agent.svg"
+                }
+            ]
+        },
+        "views": {
+            "codeAgentViewContainer": [
+                {
+                    "id": "codeAgentView",
+                    "name": "AI Assistant",
+                    "icon": "resources/code-agent.svg",
+                    "type": "webview"
+                }
+            ]
+        },
+        "viewsWelcome": [
+            {
+                "view": "codeAgentView",
+                "contents": "Welcome to Code Agent. [Start Conversation](command:codeagent.start)"
+            }
+        ]
+    },
+    "scripts": {
+        "vscode:prepublish": "npm run compile",
+        "compile": "tsc -p ./",
+        "watch": "tsc -watch -p ./",
+        "pretest": "npm run compile && npm run lint",
+        "lint": "eslint src --ext ts",
+        "test": "node ./out/test/runTest.js"
+    },
+    "devDependencies": {
+        "@types/glob": "^7.2.0",
+        "@types/mocha": "^9.1.0",
+        "@types/node": "16.x",
+        "@types/vscode": "^1.74.0",
+        "@typescript-eslint/eslint-plugin": "^5.27.0",
+        "@typescript-eslint/parser": "^5.27.0",
+        "eslint": "^8.16.0",
+        "glob": "^8.0.3",
+        "mocha": "^10.0.0",
+        "typescript": "^4.7.2",
+        "vscode-test": "^1.6.1"
+    },
+    "dependencies": {
+        "dotenv": "^16.4.7",
+        "gulp": "^5.0.0",
+        "node-fetch": "^2.7.0"
+    }
+}
