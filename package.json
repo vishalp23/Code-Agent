@@ -3,7 +3,7 @@
     "displayName": "Code Agent",
     "description": "An AI-powered VS Code extension that automates project setup and development workflows using LLM-generated instructions.",
     "version": "0.0.2",
-    "publisher": "51411d90-a044-6906-93e9-8c34bce60fcf",
+    "publisher": "code-agent",
     "repository": {
         "type": "git",
         "url": "https://github.com/vishalp23/Code-Agent.git"
