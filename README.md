@@ -1,95 +1,229 @@
+# Enterprise Agentic IDE
 
-# Code Agent
+**Enterprise Agentic IDE** is a next-generation development environment built on VS Code, featuring advanced AI agents for autonomous coding, testing, debugging, and more. Designed for enterprise teams with multi-tenancy, authentication, and comprehensive backend services.
 
-**Code Agent** is a Visual Studio Code extension that helps automate project setup and development workflows using AI-generated instructions. Based on user queries, Code Agent generates detailed implementation plans, executes dynamic setup commands, and even generates complete project source code—all from within VS Code.
+**Status**: Week 1, Day 1-2 ✅ Complete + Cleaned | Backend API Ready | 6-Week Hybrid Approach
 
-## Features
+## 🏗️ Monorepo Structure
 
-- **AI-Generated Project Plans:**  
-  Simply type in your project query, and Code Agent uses an LLM to generate a detailed plan with recommended technology stacks, key components, and step-by-step instructions.
+This is a Turborepo-based monorepo containing:
 
-- **Automated Setup Workflow:**  
-  Code Agent can execute dynamic terminal commands to scaffold your project, create necessary folders, and launch your project.
+```
+enterprise-agentic-ide/
+├── apps/
+│   ├── vscode-extension/    # VS Code extension (original Code Agent)
+│   ├── api/                  # Backend API service
+│   └── web/                  # Web dashboard (Next.js)
+├── packages/
+│   ├── types/                # Shared TypeScript types
+│   ├── shared/               # Shared utilities
+│   └── config/               # Shared configurations
+├── docs/                     # Documentation
+└── tools/                    # Build and deployment tools
+```
 
-- **Development Code Generation:**  
-  For full development workflows, the extension can use the LLM to generate production-ready source code, writing files to your project folder.
-
-- **Interactive Webview Interface:**  
-  A built-in webview allows you to review the generated plan and select options (e.g., "Setup Project" or "Develop Project") to continue the workflow.
-
-## Installation
+## 🚀 Quick Start
 
 ### Prerequisites
 
-- **Visual Studio Code** (latest version recommended)
-- **Node.js** and **npm** (for building the extension)
-- An active **OpenAI API key** (stored in a `.env` file and not committed to source control)
+- **Node.js** >= 22.0.0
+- **npm** >= 10.0.0
+- **Git**
 
-### Steps
+### Installation
 
-1. **Clone the Repository:**
+1. **Clone the repository:**
 
    ```bash
    git clone https://github.com/vishalp23/Code-Agent.git
    cd Code-Agent
    ```
 
-2. **Install Dependencies:**
+2. **Install dependencies:**
 
    ```bash
    npm install
    ```
 
-3. **Configure Environment:**
-
-   Create a `.env` file at the root of the repository with the following content:
-
-   ```env
-   OPENAI_API_KEY=your_openai_api_key_here
-   ```
-
-   **Note:** Make sure the `.env` file is added to `.gitignore` so that your secrets are not pushed to the remote repository.
-
-4. **Build the Extension:**
-
-   Compile the TypeScript code (if not using a watcher):
+3. **Build all packages:**
 
    ```bash
-   npm run compile
+   npm run build
    ```
 
-5. **Run the Extension in VS Code:**
+4. **Start development servers:**
 
-   Press `F5` in VS Code to launch a new Extension Development Host window with Code Agent activated.
+   ```bash
+   npm run dev
+   ```
 
-## Usage
+## 📦 Workspaces
 
-1. **Activate the Extension:**
+### Apps
 
-   Once Code Agent is activated, open the webview panel titled **Code Agent** in VS Code.
+#### VS Code Extension (`apps/vscode-extension`)
+The original Code Agent extension with AI-powered project setup and code generation.
 
-2. **Generate a Plan:**
+```bash
+cd apps/vscode-extension
+npm run compile
+# Press F5 in VS Code to debug
+```
 
-   - Type your project query (e.g., "Create a React app with a Python backend") in the input field.
-   - Click the **Send** button (or press Enter).
-   - Code Agent will generate and display a detailed plan using an LLM.
+#### API Server (`apps/api`)
+Backend service for agent orchestration, authentication, and data management.
 
-3. **Select an Option:**
+```bash
+cd apps/api
+npm run dev
+# Server runs on http://localhost:3000
+```
 
-   After reviewing the plan, choose an option (e.g., "Setup Project" or "Develop Project") from the displayed buttons.  
-   The extension will then execute the corresponding workflow:
-   - **Setup Project:** Runs terminal commands to scaffold the project.
-   - **Develop Project:** Generates full source code and writes files to your project folder.
+#### Web Dashboard (`apps/web`)
+Admin dashboard and user portal (Next.js).
 
-## Contributing
+```bash
+cd apps/web
+npm run dev
+# Dashboard runs on http://localhost:3001
+```
 
-Contributions are welcome! If you have ideas for improvements, bug fixes, or new features, feel free to open an issue or submit a pull request.
+### Packages
 
-## License
+#### Types (`packages/types`)
+Shared TypeScript types and interfaces used across all workspaces.
+
+#### Shared (`packages/shared`)
+Common utilities, helpers, and functions.
+
+#### Config (`packages/config`)
+Shared ESLint, TypeScript, and other configuration files.
+
+## 🛠️ Development
+
+### Available Scripts
+
+```bash
+npm run build        # Build all packages
+npm run dev          # Start all dev servers
+npm run lint         # Lint all packages
+npm run test         # Run all tests
+npm run format       # Format code with Prettier
+npm run type-check   # Type check all packages
+npm run clean        # Clean build artifacts
+```
+
+### Working with Turborepo
+
+Turborepo caches build outputs and runs tasks in parallel for maximum speed.
+
+```bash
+# Build only the API
+npm run build --filter=@agentic-ide/api
+
+# Run dev for API and its dependencies
+npm run dev --filter=@agentic-ide/api...
+
+# Clear Turborepo cache
+npx turbo clean
+```
+
+## 📖 Documentation
+
+**Essential Reading**:
+- [CURRENT_STATUS.md](./CURRENT_STATUS.md) - 📍 **Start here** - Current state & next steps
+- [SETUP_INSTRUCTIONS.md](./SETUP_INSTRUCTIONS.md) - 🚀 Quick start guide
+- [ACCELERATED_6WEEK_PLAN.md](./ACCELERATED_6WEEK_PLAN.md) - 📅 Complete 6-week roadmap
+- [WEEK1_PROGRESS.md](./WEEK1_PROGRESS.md) - 📝 Week 1 detailed plan
+- [PROJECT_STRUCTURE.md](./PROJECT_STRUCTURE.md) - 📁 Directory layout
+- [CLEANUP_SUMMARY.md](./CLEANUP_SUMMARY.md) - ✨ Recent cleanup details
+
+## 🔐 Environment Variables
+
+Create a `.env` file in the root directory:
+
+```env
+# API Configuration
+PORT=3000
+NODE_ENV=development
+
+# OpenAI API
+OPENAI_API_KEY=your_openai_api_key_here
+
+# Database
+DATABASE_URL=postgresql://user:password@localhost:5432/agentic_ide
+
+# Redis
+REDIS_URL=redis://localhost:6379
+
+# Authentication
+JWT_SECRET=your_jwt_secret_here
+```
+
+## 🧪 Testing
+
+```bash
+# Run all tests
+npm run test
+
+# Run tests for specific package
+npm run test --filter=@agentic-ide/api
+
+# Run tests in watch mode
+npm run test -- --watch
+```
+
+## 🚢 Deployment
+
+### Docker
+
+```bash
+# Build Docker images
+docker-compose build
+
+# Start services
+docker-compose up -d
+
+# View logs
+docker-compose logs -f
+```
+
+### Production Build
+
+```bash
+# Build for production
+NODE_ENV=production npm run build
+
+# Start production server
+npm run start
+```
+
+## 🤝 Contributing
+
+We welcome contributions! Please see our [Contributing Guide](./docs/contributing.md) for details.
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📄 License
 
 This project is licensed under the [MIT License](LICENSE).
 
-## Contact
+## 🔗 Links
 
-For any questions or support, please [open an issue](https://github.com/vishalp23/Code-Agent/issues).
+- [GitHub Repository](https://github.com/vishalp23/Code-Agent)
+- [Issue Tracker](https://github.com/vishalp23/Code-Agent/issues)
+- [Discussions](https://github.com/vishalp23/Code-Agent/discussions)
 
+## 📞 Support
+
+For questions or support:
+- Open an [issue](https://github.com/vishalp23/Code-Agent/issues)
+- Start a [discussion](https://github.com/vishalp23/Code-Agent/discussions)
+
+---
+
+**Built with ❤️ for enterprise development teams**

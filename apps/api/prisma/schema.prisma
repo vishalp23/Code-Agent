@@ -1,0 +1,230 @@
+// Prisma schema for Enterprise Agentic IDE
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// User model
+model User {
+  id            String      @id @default(uuid())
+  email         String      @unique
+  passwordHash  String
+  name          String?
+  isAdmin       Boolean     @default(false)
+  isActive      Boolean     @default(true)
+  budgetCents   Int         @default(1000) // Default $10
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  lastLoginAt   DateTime?
+
+  // Relations
+  workspaceMembers WorkspaceMember[]
+  tasks            Task[]
+  refreshTokens    RefreshToken[]
+  apiKeys          ApiKey[]
+
+  @@index([email])
+  @@map("users")
+}
+
+// Workspace (Teams)
+model Workspace {
+  id          String    @id @default(uuid())
+  name        String
+  slug        String    @unique
+  description String?
+  budgetCents Int       @default(10000) // Default $100 per workspace
+  isActive    Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  // Relations
+  members WorkspaceMember[]
+  tasks   Task[]
+
+  @@index([slug])
+  @@map("workspaces")
+}
+
+// Workspace membership with roles
+model WorkspaceMember {
+  id          String   @id @default(uuid())
+  workspaceId String
+  userId      String
+  role        Role     @default(MEMBER)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([workspaceId, userId])
+  @@index([userId])
+  @@index([workspaceId])
+  @@map("workspace_members")
+}
+
+enum Role {
+  OWNER
+  ADMIN
+  MEMBER
+  VIEWER
+}
+
+// Task execution
+model Task {
+  id              String     @id @default(uuid())
+  workspaceId     String
+  userId          String
+  agentId         String
+  input           String     @db.Text
+  output          String?    @db.Text
+  status          TaskStatus @default(PENDING)
+  toolVersion     String     @default("1.0.0")
+  promptVersion   String     @default("1.0.0")
+  budgetCents     Int        @default(10) // Default $0.10 per task
+  costCents       Int?
+  tokensIn        Int?
+  tokensOut       Int?
+  retryCount      Int        @default(0)
+  maxRetries      Int        @default(3)
+  startedAt       DateTime?
+  finishedAt      DateTime?
+  errorMessage    String?    @db.Text
+  metadata        Json?      // Store additional context
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+
+  // Relations
+  workspace Workspace  @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  runs      AgentRun[]
+
+  @@index([userId, status])
+  @@index([workspaceId, status])
+  @@index([agentId, status])
+  @@index([createdAt])
+  @@map("tasks")
+}
+
+enum TaskStatus {
+  PENDING
+  RUNNING
+  WAITING_IO
+  SUCCEEDED
+  FAILED
+  CANCELLED
+  TIMEOUT
+}
+
+// Agent execution runs (detailed logs)
+model AgentRun {
+  id           String   @id @default(uuid())
+  taskId       String
+  provider     String   // openai, anthropic, ollama
+  model        String   // gpt-4o-mini, claude-3-sonnet, etc.
+  tokensIn     Int
+  tokensOut    Int
+  costCents    Int
+  latencyMs    Int
+  isSuccess    Boolean
+  errorMessage String?  @db.Text
+  request      Json?    // Store request payload
+  response     Json?    // Store response payload
+  createdAt    DateTime @default(now())
+
+  // Relations
+  task Task @relation(fields: [taskId], references: [id], onDelete: Cascade)
+
+  @@index([taskId])
+  @@index([provider])
+  @@index([createdAt])
+  @@map("agent_runs")
+}
+
+// Refresh tokens for JWT
+model RefreshToken {
+  id        String   @id @default(uuid())
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  revokedAt DateTime?
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([token])
+  @@map("refresh_tokens")
+}
+
+// API keys for programmatic access
+model ApiKey {
+  id          String    @id @default(uuid())
+  userId      String
+  name        String
+  keyHash     String    @unique
+  lastUsedAt  DateTime?
+  expiresAt   DateTime?
+  isActive    Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  revokedAt   DateTime?
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([keyHash])
+  @@map("api_keys")
+}
+
+// Usage analytics (aggregated daily)
+model UsageStats {
+  id               String   @id @default(uuid())
+  date             DateTime @db.Date
+  workspaceId      String?
+  userId           String?
+  agentId          String?
+  provider         String?
+  totalTasks       Int      @default(0)
+  successfulTasks  Int      @default(0)
+  failedTasks      Int      @default(0)
+  totalTokensIn    Int      @default(0)
+  totalTokensOut   Int      @default(0)
+  totalCostCents   Int      @default(0)
+  avgLatencyMs     Int?
+  createdAt        DateTime @default(now())
+
+  @@unique([date, workspaceId, userId, agentId, provider])
+  @@index([date])
+  @@index([workspaceId])
+  @@index([userId])
+  @@map("usage_stats")
+}
+
+// Audit logs for security
+model AuditLog {
+  id          String   @id @default(uuid())
+  userId      String?
+  workspaceId String?
+  action      String   // login, create_task, delete_workspace, etc.
+  resource    String?  // users, tasks, workspaces
+  resourceId  String?
+  metadata    Json?
+  ipAddress   String?
+  userAgent   String?
+  createdAt   DateTime @default(now())
+
+  @@index([userId])
+  @@index([workspaceId])
+  @@index([action])
+  @@index([createdAt])
+  @@map("audit_logs")
+}

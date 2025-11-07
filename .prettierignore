@@ -1,0 +1,13 @@
+node_modules
+dist
+out
+build
+coverage
+.next
+.turbo
+*.log
+.env*
+!.env.example
+package-lock.json
+pnpm-lock.yaml
+yarn.lock

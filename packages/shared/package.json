@@ -1,0 +1,23 @@
+{
+  "name": "@agentic-ide/shared",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Shared utilities and functions",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "lint": "eslint src --ext .ts",
+    "test": "jest",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@agentic-ide/types": "*"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.5",
+    "jest": "^29.7.0",
+    "@types/jest": "^29.5.12"
+  }
+}
