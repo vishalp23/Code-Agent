@@ -1,5 +1,5 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
-import { logger } from '../utils/logger';
+import { logger } from '../config/logger';
 
 class SupabaseService {
   private static instance: SupabaseService;

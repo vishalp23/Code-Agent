@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { supabaseService } from '../services/supabase.service';
-import { logger } from '../utils/logger';
+import { logger } from '../config/logger';
 
 // Extend Express Request type to include user
 declare global {
